@@ -1,0 +1,75 @@
+<div style="max-width:400px; margin:80px auto; padding:30px;
+  border:1px solid #e2e8f0; border-radius:16px; background:white;">
+
+  <h2 style="text-align:center; margin-bottom:25px;">🔐 Connexion</h2>
+
+  <!-- ✅ template-driven : #loginForm="ngForm" + novalidate -->
+  <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)" novalidate>
+
+    <div style="margin-bottom:15px;">
+      <label style="display:block; margin-bottom:5px; font-weight:bold;">
+        Nom d'utilisateur
+      </label>
+
+      <!-- ✅ [(ngModel)] two-way binding + #username="ngModel" -->
+      <input
+        [(ngModel)]="loginData.username"
+        name="username"
+        required
+        minlength="3"
+        #username="ngModel"
+        style="width:100%; padding:10px; border:1px solid #e2e8f0;
+        border-radius:8px; font-size:14px; box-sizing:border-box;">
+
+      <!-- ✅ validation template-driven -->
+      @if (username.invalid && username.touched) {
+        <span style="color:red; font-size:12px;">
+          @if (username.errors?.['required'])  { Champ obligatoire }
+          @if (username.errors?.['minlength']) { Minimum 3 caractères }
+        </span>
+      }
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <label style="display:block; margin-bottom:5px; font-weight:bold;">
+        Mot de passe
+      </label>
+
+      <!-- ✅ [(ngModel)] two-way binding + #password="ngModel" -->
+      <input
+        [(ngModel)]="loginData.password"
+        name="password"
+        type="password"
+        required
+        minlength="4"
+        #password="ngModel"
+        style="width:100%; padding:10px; border:1px solid #e2e8f0;
+        border-radius:8px; font-size:14px; box-sizing:border-box;">
+
+      @if (password.invalid && password.touched) {
+        <span style="color:red; font-size:12px;">
+          @if (password.errors?.['required'])  { Champ obligatoire }
+          @if (password.errors?.['minlength']) { Minimum 4 caractères }
+        </span>
+      }
+    </div>
+
+    @if (error()) {
+      <div style="background:#fee2e2; color:#dc2626;
+        padding:10px; border-radius:8px;
+        margin-bottom:15px; text-align:center;">
+        {{ error() }}
+      </div>
+    }
+
+    <button type="submit"
+            [disabled]="loginForm.invalid || loading()"
+            style="width:100%; padding:12px; background:#2563eb;
+            color:white; border:none; border-radius:8px;
+            font-size:16px; font-weight:bold; cursor:pointer;">
+      @if (loading()) { ⏳ Connexion... } @else { 🔐 Se connecter }
+    </button>
+
+  </form>
+
+</div>

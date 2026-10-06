@@ -1,0 +1,36 @@
+<nav style="
+  background:#2563eb; padding:12px 20px;
+  display:flex; align-items:center;
+  justify-content:space-between; color:white;">
+
+  <div style="font-weight:bold; font-size:20px; cursor:pointer;"
+       routerLink="/home">
+    🛒 E-Shop
+  </div>
+
+  <div style="display:flex; align-items:center; gap:20px;">
+
+    <a routerLink="/cart" style="color:white; text-decoration:none;">
+      🛍️ Cart ({{ count() }})
+    </a>
+
+    <span *ngIf="isLoggedIn()" style="color:#bfdbfe;">
+      👤 {{ userName() }}
+    </span>
+
+    <a *ngIf="!isLoggedIn()" routerLink="/login"
+       style="color:white; text-decoration:none;
+       background:rgba(255,255,255,0.2);
+       padding:6px 14px; border-radius:8px;">
+      Connexion
+    </a>
+
+    <button *ngIf="isLoggedIn()" (click)="logout()" style="
+      background:rgba(255,255,255,0.2); color:white;
+      border:none; padding:6px 14px;
+      border-radius:8px; cursor:pointer;">
+      Déconnexion
+    </button>
+
+  </div>
+</nav>

@@ -1,0 +1,113 @@
+<div style="padding:20px; background:yellow;" *ngIf="!product()">
+  ⏳ Chargement... ID = {{ currentId }}
+</div>
+
+<div style="max-width:900px; margin:40px auto; padding:20px;" *ngIf="product()">
+
+  <button (click)="goBack()" style="
+    background:none; border:1px solid #e2e8f0;
+    padding:8px 16px; border-radius:8px;
+    cursor:pointer; margin-bottom:30px; color:#64748b;">
+    ← Retour
+  </button>
+
+  <div style="display:flex; gap:40px; flex-wrap:wrap;">
+
+    <div style="flex:1; min-width:280px; background:#f7f7f7;
+      border-radius:20px; display:flex; align-items:center;
+      justify-content:center; padding:30px;">
+      <img [src]="product().thumbnail"
+           style="max-width:100%; max-height:320px; object-fit:contain;">
+    </div>
+
+    <div style="flex:1; min-width:280px;">
+
+      <span style="background:#dbeafe; color:#2563eb; padding:4px 12px;
+        border-radius:20px; font-size:12px; font-weight:bold;">
+        {{ product().category | uppercase }}
+      </span>
+
+      <h1 style="font-size:28px; margin:15px 0 10px; color:#1e293b;">
+        {{ product().title | titlecase }}
+      </h1>
+
+      <p style="color:#64748b; line-height:1.7; margin-bottom:20px;">
+        {{ product().description | slice:0:150 }}...
+      </p>
+
+      <div style="font-size:36px; font-weight:bold; color:#16a34a; margin-bottom:15px;">
+        {{ product().price | currency:'USD' }}
+      </div>
+
+      <!-- ✅ type alias PriceRange affiché -->
+      <div style="font-size:12px; color:#64748b; margin-bottom:10px;">
+        Gamme : {{ priceRange() }}
+      </div>
+
+      <!-- ✅ enum StockLevel avec @switch -->
+      @switch (stockLevel()) {
+        @case (StockLevel.DISPONIBLE) {
+          <div style="color:#16a34a; font-size:13px; margin-bottom:15px;">
+            ✅ {{ product().stock | number }} disponibles
+          </div>
+        }
+        @case (StockLevel.LIMITE) {
+          <div style="color:#f59e0b; font-size:13px; margin-bottom:15px;">
+            ⚠️ Plus que {{ product().stock | number }} en stock !
+          </div>
+        }
+        @case (StockLevel.RUPTURE) {
+          <div style="color:#dc2626; font-size:13px; margin-bottom:15px;">
+            ❌ Rupture de stock
+          </div>
+        }
+      }
+
+      <div style="display:flex; align-items:center; gap:15px; margin-bottom:10px;">
+        <span style="font-weight:bold;">Quantité :</span>
+        <button (click)="decrease()"
+                [ngClass]="{ 'btn-disabled': quantity() <= 1 }"
+                style="width:36px; height:36px; border:1px solid #e2e8f0;
+                border-radius:8px; cursor:pointer; font-size:18px; background:white;">
+                −
+        </button>
+        <span style="font-size:18px; font-weight:bold;">{{ quantity() }}</span>
+        <button (click)="increase()"
+                [ngClass]="{ 'btn-disabled': quantity() >= product().stock }"
+                style="width:36px; height:36px; border:1px solid #e2e8f0;
+                border-radius:8px; cursor:pointer; font-size:18px; background:white;">
+                +
+        </button>
+      </div>
+
+      <!-- ✅ tuple quantityLabel -->
+      <div style="font-size:12px; color:#64748b; margin-bottom:20px;">
+        {{ quantityLabel()[0] }} {{ quantityLabel()[1] }}
+      </div>
+
+      <!-- ✅ totalPrice computed -->
+      <div style="font-size:16px; font-weight:bold; 
+        color:#2563eb; margin-bottom:20px;">
+        Total : {{ totalPrice() | currency:'USD' }}
+      </div>
+
+      <button (click)="addToCart()"
+              [disabled]="stockLevel() === StockLevel.RUPTURE"
+              style="background:#2563eb; color:white; border:none;
+              padding:15px 30px; border-radius:12px;
+              font-size:16px; font-weight:bold;
+              cursor:pointer; width:100%; margin-bottom:12px;">
+        🛒 Ajouter au panier
+      </button>
+
+      @if (added()) {
+        <div style="background:#dcfce7; color:#16a34a;
+          padding:12px; border-radius:10px;
+          text-align:center; font-weight:bold;">
+          ✅ Ajouté au panier !
+        </div>
+      }
+
+    </div>
+  </div>
+</div>
